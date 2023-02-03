@@ -9,11 +9,17 @@ Currently implemented: https://loncek-kuhaj.si/tedenski-jedilnik-tp.php
 Python requirements:
 
 ```
-pip install beautifulsoup4
+pip install beautifulsoup4 translators
 ```
 
 Run with
 
 ```
 python loncek_jedilnik.py
+```
+
+English version (takes longer to load since it uses Google translate)
+
+```
+python loncek_jedilnik.py --en
 ```

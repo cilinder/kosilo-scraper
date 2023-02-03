@@ -1,15 +1,26 @@
+import sys
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
+import translators as ts
+import translators.server as tss
+
 
 class DailyMenu:
+    def __init__(self, english):
+        self.english = english
+
     def __str__(self):
-        menu = f"{self.day}\n------------\nJuha: {self.soup['soup']}\n"
+        daily_soup = self.soup['soup'] if not self.english else tss.google(self.soup['soup'], 'sl', 'en')
+        menu = f"{self.day}\n------------\nJuha: {daily_soup}\n"
+        if self.english:
+            for idx, item in enumerate(self.menu):
+                self.menu[idx]['menu'] = tss.google(item['menu'], 'sl', 'en')
         l = max([len(item['menu']) for item in self.menu])
         for idx, item in enumerate(self.menu):
-            menu += f"Menu {idx+1}: {item['menu']}     {' ' * (l - len(item['menu']))}Cena: {item['price']}\n"
+                menu += f"Menu {idx+1}: {item['menu']}     {' ' * (l - len(item['menu']))}{'Price' if self.english else 'Cena'}: {item['price']}\n"
         return menu
 
-def main():
+def main(english=False):
     req = Request(
         url='https://loncek-kuhaj.si/tedenski-jedilnik-tp.php',
         headers={'User-Agent': 'Mozilla/5.0'}
@@ -21,7 +32,7 @@ def main():
         items.append(day)
     items = items[1:]
     day = -1
-    menus = [DailyMenu() for _ in range(5)]
+    menus = [DailyMenu(english) for _ in range(5)]
     menus[0].day = "Ponedeljek"
     menus[1].day = "Torek"
     menus[2].day = "Sreda"
@@ -40,4 +51,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "--en":
+        main(english=True)
+    else:
+        main(False)
