@@ -30,11 +30,11 @@ def main(english=False):
     items=[]
     menus = [DailyMenu(english) for _ in range(5)]
     today = date.today()
-    menus[0].day = "Monday " if english else "Ponedeljek " + str(today)
-    menus[1].day = "Tuesday " if english else "Torek " + str(today + timedelta(days=1))
-    menus[2].day = "Wednesday " if english else "Sreda " + str(today + timedelta(days=2))
-    menus[3].day = "Thursday " if english else "Četrtek " + str(today + timedelta(days=3))
-    menus[4].day = "Friday" if english else "Petek " + str(today + timedelta(days=4))
+    menus[0].day = ("Monday " if english else "Ponedeljek ") + str(today)
+    menus[1].day = ("Tuesday " if english else "Torek ") + str(today + timedelta(days=1))
+    menus[2].day = ("Wednesday " if english else "Sreda ") + str(today + timedelta(days=2))
+    menus[3].day = ("Thursday " if english else "Četrtek ") + str(today + timedelta(days=3))
+    menus[4].day = ("Friday " if english else "Petek ") + str(today + timedelta(days=4))
 
     day = 0
     for table in soup.find_all('table'):
