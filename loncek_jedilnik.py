@@ -3,7 +3,7 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import translators as ts
 import translators.server as tss
-
+from datetime import timedelta, date
 
 class DailyMenu:
     def __init__(self, english):
@@ -11,7 +11,7 @@ class DailyMenu:
 
     def __str__(self):
         daily_soup = self.soup['soup'] if not self.english else tss.google(self.soup['soup'], 'sl', 'en')
-        menu = f"{self.day}\n------------\nJuha: {daily_soup}\n"
+        menu = f"{self.day}\n------------\n{'Soup' if self.english else 'Juha'}: {daily_soup}\n"
         if self.english:
             for idx, item in enumerate(self.menu):
                 self.menu[idx]['menu'] = tss.google(item['menu'], 'sl', 'en')
@@ -33,11 +33,12 @@ def main(english=False):
     items = items[1:]
     day = -1
     menus = [DailyMenu(english) for _ in range(5)]
-    menus[0].day = "Ponedeljek"
-    menus[1].day = "Torek"
-    menus[2].day = "Sreda"
-    menus[3].day = "Četrtek"
-    menus[4].day = "Petek"
+    today = date.today()
+    menus[0].day = "Ponedeljek " + str(today)
+    menus[1].day = "Torek " + str(today + timedelta(days=1))
+    menus[2].day = "Sreda " + str(today + timedelta(days=2))
+    menus[3].day = "Četrtek " + str(today + timedelta(days=3))
+    menus[4].day = "Petek " + str(today + timedelta(days=4))
     for item in items:
         entries = list(item.find_all('p'))
         if entries[0].string == "Dnevna juha":
